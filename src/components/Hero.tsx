@@ -1,22 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, Easing } from "motion/react";
 import FilePicker from "./custom/FilePicker";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 
 export default function HeroSection() {
-  const [files, setFiles] = useState<File[]>([]);
   const [submitActive, setSubmitActive] = useState(false);
   const [animationComplete, setAnimationComplete] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(0);
+  const [windowHeight, setWindowHeight] = useState(0);
+  const [heroY, setHeroY] = useState(0);
+  const [heroHeight, setHeroHeight] = useState(0);
+  const [topOffset, setTopOffset] = useState(0);
 
-  const handleFileUpload = (files: File[]) => {
-    setFiles(files);
-    console.log(files);
-  };
+  const heroTextContainerRef = useRef(null);
 
   const [startAnimation, setStartAnimation] = useState(false);
+
+  useEffect(() => {
+    const updateOffset = () => {
+      if (heroTextContainerRef.current) {
+        const rect = heroTextContainerRef.current.getBoundingClientRect();
+        const offset = rect.height / 2 - 30;
+        setTopOffset(offset);
+      }
+    };
+
+    updateOffset();
+    window.addEventListener("resize", updateOffset);
+    return () => window.removeEventListener("resize", updateOffset);
+  }, []);
+
+  useEffect(() => {
+    if (heroTextContainerRef.current) {
+      setHeroHeight(heroTextContainerRef.current.offsetHeight);
+
+      const rect = heroTextContainerRef.current.getBoundingClientRect();
+      setHeroY(rect.top); // y position relative to viewport
+      // Or: setHeroY(rect.y); // same as rect.top
+    }
+  }, [animationComplete, startAnimation, windowWidth, windowHeight]);
 
   const textVariants = {
     initial: { y: 0, opacity: 1, scale: 1 },
@@ -66,7 +91,7 @@ export default function HeroSection() {
   const uploadBtnVariants = {
     initial: { y: 20 },
     animate: {
-      y: -120,
+      y: -topOffset,
       transition: { duration: 0.5, ease: "easeInOut" as Easing, delay: 0.5 },
     },
     postSubmit: {
@@ -83,7 +108,7 @@ export default function HeroSection() {
   const textBoxVariants = {
     initial: { y: -200, opacity: 0 },
     animate: {
-      y: -100,
+      y: -topOffset + 20,
       opacity: 1,
       transition: {
         duration: 1,
@@ -105,7 +130,7 @@ export default function HeroSection() {
   console.log(submitActive, "submit");
 
   return (
-    <div className="h-[90dvh] border-2 mt-10 relative">
+    <div className="h-[90vh] border-2 mt-10 relative">
       {/* clip path */}
       {!animationComplete && (
         <motion.div
@@ -126,24 +151,28 @@ export default function HeroSection() {
       {/* hero content/form... */}
       {!animationComplete && (
         <div
-          className={`absolute top-[10%] left-[50%] transform: translate-x-[-50%] justify-center items-center flex flex-col text-center/*  */`}
+          className={`absolute top-[3%] sm:top-[10%] md:top-[13%] xl:top-[15%] left-[50%] transform: translate-x-[-50%] justify-center items-center flex flex-col text-center w-[100%] lg:w-[65%]`}
+          ref={heroTextContainerRef}
         >
           <motion.h1
             variants={textVariants}
             initial="initial"
-            className="text-[4rem]"
             animate={startAnimation ? "animate" : "initial"}
+            className="text-5xl xl:text-7xl flex justify-center items-center leading-[4rem]"
           >
-            Finding Jobs Made Easier
+            Simplified Job Searching
           </motion.h1>
 
           <motion.p
             variants={textVariants}
             initial="initial"
-            className="text-center"
             animate={startAnimation ? "animate" : "initial"}
+            className="text-center mt-2 md:mt-4 text-sm md:text-md px-4 w-[100%] md:w-[90%] lg:w-[85%]"
           >
-            Get personalized job recommendations
+            Get personalized job listings from various portals based on your
+            resume and the job description you provide — all in one place. Plus,
+            see how well your resume matches each role with detailed match
+            scores.
           </motion.p>
 
           <motion.div
@@ -156,7 +185,7 @@ export default function HeroSection() {
                 ? "animate"
                 : "initial"
             }
-            className="flex justify-center"
+            className="flex justify-center mt-1 md:mt-4"
           >
             <FilePicker setStartAnimation={setStartAnimation} />
           </motion.div>
@@ -186,7 +215,7 @@ export default function HeroSection() {
               initial: { ...textBoxVariants.initial, scale: 1 },
               animate: {
                 ...textBoxVariants.animate,
-                y: -80,
+                y: -topOffset + 40,
               },
               click: {
                 scale: 0.9,

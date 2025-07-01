@@ -63,7 +63,9 @@ function FilePicker({ setStartAnimation }: { setStartAnimation: any }) {
               animate="animate"
               exit="exit"
             >
-              <motion.p className="text-sm underline">{fileName}</motion.p>
+              <motion.span className="text-sm underline w-[90%] overflow-hidden whitespace-nowrap text-ellipsis text-left">
+                {fileName}
+              </motion.span>
 
               <motion.div
                 onClick={() => setFileName("")}
