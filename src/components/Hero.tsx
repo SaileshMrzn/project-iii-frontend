@@ -5,6 +5,7 @@ import { motion, Easing } from "motion/react";
 import FilePicker from "./custom/FilePicker";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
+import { useForm, Controller } from "react-hook-form";
 
 export default function HeroSection() {
   const [submitActive, setSubmitActive] = useState(false);
@@ -16,6 +17,25 @@ export default function HeroSection() {
   const [topOffset, setTopOffset] = useState(0);
 
   const heroTextContainerRef = useRef(null);
+
+  const { control, watch, handleSubmit } = useForm();
+
+  const submitForm = (data) => {
+    // setSubmitActive(true)
+    const cleanDescription = data.description
+      ?.replace(/<[^>]+>/g, "") // Remove HTML tags
+      .replace(/\s+/g, " ") // Replace multiple spaces/newlines with single space
+      .trim(); // Trim leading/trailing spaces
+
+    const payload = {
+      ...data,
+      description: cleanDescription,
+    };
+
+    console.log(payload, "pay");
+  };
+
+  console.log(watch("file"));
 
   const [startAnimation, setStartAnimation] = useState(false);
 
@@ -187,7 +207,13 @@ export default function HeroSection() {
             }
             className="flex justify-center mt-1 md:mt-4"
           >
-            <FilePicker setStartAnimation={setStartAnimation} />
+            <Controller
+              name="file"
+              control={control}
+              render={({ field }) => (
+                <FilePicker {...field} setStartAnimation={setStartAnimation} />
+              )}
+            />
           </motion.div>
 
           <motion.div
@@ -202,10 +228,17 @@ export default function HeroSection() {
             }
             className="text-center w-[90%]"
           >
-            <Textarea
-              id="description"
-              placeholder="Enter job description"
-              className="min-h-24 max-h-32"
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <Textarea
+                  {...field}
+                  id="description"
+                  placeholder="Enter job description"
+                  className="min-h-24 max-h-32"
+                />
+              )}
             />
           </motion.div>
 
@@ -234,7 +267,7 @@ export default function HeroSection() {
             className="text-center"
           >
             <Button
-              onClick={() => setSubmitActive(true)}
+              onClick={handleSubmit(submitForm)}
               className="cursor-pointer"
             >
               Submit

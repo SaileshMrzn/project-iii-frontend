@@ -1,8 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import { IoCloudUploadOutline, IoCloseOutline } from "react-icons/io5";
 import { AnimatePresence, Easing, motion } from "motion/react";
+import { ControllerRenderProps } from "react-hook-form";
 
-function FilePicker({ setStartAnimation }: { setStartAnimation: any }) {
+interface FilePickerProps extends ControllerRenderProps {
+  setStartAnimation: (start: boolean) => void;
+}
+
+const FilePicker: React.FC<FilePickerProps> = ({
+  onChange,
+  name,
+  ref: fieldRef,
+  setStartAnimation,
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState<string>("");
 
@@ -12,8 +22,10 @@ function FilePicker({ setStartAnimation }: { setStartAnimation: any }) {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setFileName(e.target.files[0].name);
+      const file = e.target.files[0];
+      setFileName(file.name);
       setStartAnimation(true);
+      onChange(file);
     }
   };
 
@@ -45,7 +57,12 @@ function FilePicker({ setStartAnimation }: { setStartAnimation: any }) {
       >
         <input
           type="file"
-          ref={inputRef}
+          ref={(e) => {
+            if (typeof fieldRef === "function") {
+              fieldRef(e);
+            }
+            inputRef.current = e;
+          }}
           className="hidden"
           onChange={handleFileChange}
         />
@@ -84,6 +101,6 @@ function FilePicker({ setStartAnimation }: { setStartAnimation: any }) {
       </div>
     </div>
   );
-}
+};
 
 export default FilePicker;
