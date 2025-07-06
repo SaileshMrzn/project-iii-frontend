@@ -9,7 +9,6 @@ interface FilePickerProps extends ControllerRenderProps {
 
 const FilePicker: React.FC<FilePickerProps> = ({
   onChange,
-  name,
   ref: fieldRef,
   setStartAnimation,
 }) => {

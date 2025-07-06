@@ -7,25 +7,28 @@ import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { useForm, Controller } from "react-hook-form";
 
+type FormData = {
+  file: File | null;
+  description: string;
+};
+
 export default function HeroSection() {
   const [submitActive, setSubmitActive] = useState(false);
   const [animationComplete, setAnimationComplete] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(0);
-  const [windowHeight, setWindowHeight] = useState(0);
-  const [heroY, setHeroY] = useState(0);
-  const [heroHeight, setHeroHeight] = useState(0);
   const [topOffset, setTopOffset] = useState(0);
 
-  const heroTextContainerRef = useRef(null);
+  const heroTextContainerRef = useRef<HTMLDivElement>(null);
 
-  const { control, watch, handleSubmit } = useForm();
+  const { control, watch, handleSubmit } = useForm<FormData>();
 
-  const submitForm = (data) => {
-    // setSubmitActive(true)
+  const submitForm = (data: FormData) => {
+    console.log(data, "dddddd");
+
+    setSubmitActive(true);
     const cleanDescription = data.description
-      ?.replace(/<[^>]+>/g, "") // Remove HTML tags
-      .replace(/\s+/g, " ") // Replace multiple spaces/newlines with single space
-      .trim(); // Trim leading/trailing spaces
+      ?.replace(/<[^>]+>/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
 
     const payload = {
       ...data,
@@ -52,16 +55,6 @@ export default function HeroSection() {
     window.addEventListener("resize", updateOffset);
     return () => window.removeEventListener("resize", updateOffset);
   }, []);
-
-  useEffect(() => {
-    if (heroTextContainerRef.current) {
-      setHeroHeight(heroTextContainerRef.current.offsetHeight);
-
-      const rect = heroTextContainerRef.current.getBoundingClientRect();
-      setHeroY(rect.top); // y position relative to viewport
-      // Or: setHeroY(rect.y); // same as rect.top
-    }
-  }, [animationComplete, startAnimation, windowWidth, windowHeight]);
 
   const textVariants = {
     initial: { y: 0, opacity: 1, scale: 1 },
@@ -147,7 +140,7 @@ export default function HeroSection() {
     },
   };
 
-  console.log(submitActive, "submit");
+  // console.log(submitActive, "submit");
 
   return (
     <div className="h-[90vh] border-2 mt-10 relative">

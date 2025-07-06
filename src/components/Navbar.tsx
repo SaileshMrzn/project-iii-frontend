@@ -1,10 +1,11 @@
 import React from "react";
+import Link from "next/link";
 
 function Navbar() {
   return (
     <header className="bg-transparent">
       <nav className="flex justify-between">
-        <a href="/">[logo] Brand</a>
+        <Link href="/">[logo] Brand</Link>
 
         {/* <ul>
           <li>
@@ -13,8 +14,8 @@ function Navbar() {
         </ul> */}
 
         <div className="flex gap-8">
-          <a href="/">Login</a>
-          <a href="/">Signup</a>
+          <Link href="/">Login</Link>
+          <Link href="/">Signup</Link>
         </div>
       </nav>
     </header>
