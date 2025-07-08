@@ -6,41 +6,71 @@ import FilePicker from "./custom/FilePicker";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { useForm, Controller } from "react-hook-form";
+import { useCompare } from "@/hooks/useCompare";
+import CompareResults from "./CompareResults";
+import { toast } from "sonner";
 
 type FormData = {
-  file: File | null;
-  description: string;
+  resume: File | null;
+  jobDescription: string;
+};
+
+export type ResultData = {
+  similarity: number;
+  matchedData: {
+    skillsMatch: {
+      allSkillsInJD: string[];
+      matchedSkills: string[];
+      percentageMatch: number;
+    };
+    keywordsMatch: {
+      allKeywordsInJD: string[];
+      matchedKeywords: string[];
+      percentageMatch: number;
+    };
+  };
 };
 
 export default function HeroSection() {
   const [submitActive, setSubmitActive] = useState(false);
   const [animationComplete, setAnimationComplete] = useState(false);
+  const [startAnimation, setStartAnimation] = useState(false);
   const [topOffset, setTopOffset] = useState(0);
 
   const heroTextContainerRef = useRef<HTMLDivElement>(null);
 
   const { control, watch, handleSubmit } = useForm<FormData>();
 
-  const submitForm = (data: FormData) => {
-    console.log(data, "dddddd");
+  const { mutate, isPending, data } = useCompare();
 
-    setSubmitActive(true);
-    const cleanDescription = data.description
+  const submitForm = (data: FormData) => {
+    const cleanDescription = data.jobDescription
       ?.replace(/<[^>]+>/g, "")
       .replace(/\s+/g, " ")
       .trim();
 
     const payload = {
       ...data,
-      description: cleanDescription,
+      jobDescription: cleanDescription,
     };
+
+    mutate(payload, {
+      onSuccess: (result) => {
+        setSubmitActive(true);
+        toast.success("Hello world");
+      },
+      onError: (error) => {
+        console.error("Comparison failed:", error);
+        toast.error(
+          (error as any)?.response?.data?.message ||
+            error.message ||
+            "An error occurred"
+        );
+      },
+    });
 
     console.log(payload, "pay");
   };
-
-  console.log(watch("file"));
-
-  const [startAnimation, setStartAnimation] = useState(false);
 
   useEffect(() => {
     const updateOffset = () => {
@@ -56,6 +86,7 @@ export default function HeroSection() {
     return () => window.removeEventListener("resize", updateOffset);
   }, []);
 
+  // animation variants
   const textVariants = {
     initial: { y: 0, opacity: 1, scale: 1 },
     animate: {
@@ -140,10 +171,8 @@ export default function HeroSection() {
     },
   };
 
-  // console.log(submitActive, "submit");
-
   return (
-    <div className="h-[90vh] border-2 mt-10 relative">
+    <div className="h-[90vh] border-2 mt-10 relative flex justify-center items-center">
       {/* clip path */}
       {!animationComplete && (
         <motion.div
@@ -201,7 +230,7 @@ export default function HeroSection() {
             className="flex justify-center mt-1 md:mt-4"
           >
             <Controller
-              name="file"
+              name="resume"
               control={control}
               render={({ field }) => (
                 <FilePicker {...field} setStartAnimation={setStartAnimation} />
@@ -222,7 +251,7 @@ export default function HeroSection() {
             className="text-center w-[90%]"
           >
             <Controller
-              name="description"
+              name="jobDescription"
               control={control}
               render={({ field }) => (
                 <Textarea
@@ -263,10 +292,18 @@ export default function HeroSection() {
               onClick={handleSubmit(submitForm)}
               className="cursor-pointer"
             >
-              Submit
+              {isPending ? "Loading..." : "Submit"}
             </Button>
           </motion.div>
         </div>
+      )}
+
+      {/* result after animation */}
+      {animationComplete && (
+        <CompareResults
+          result={data}
+          setAnimationComplete={setAnimationComplete}
+        />
       )}
     </div>
   );
