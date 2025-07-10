@@ -57,7 +57,6 @@ export default function HeroSection() {
     mutate(payload, {
       onSuccess: (result) => {
         setSubmitActive(true);
-        toast.success("Hello world");
       },
       onError: (error) => {
         console.error("Comparison failed:", error);
@@ -68,8 +67,6 @@ export default function HeroSection() {
         );
       },
     });
-
-    console.log(payload, "pay");
   };
 
   useEffect(() => {
@@ -136,7 +133,7 @@ export default function HeroSection() {
     initial: { y: 20 },
     animate: {
       y: -topOffset,
-      transition: { duration: 0.5, ease: "easeInOut" as Easing, delay: 0.5 },
+      transition: { duration: 0.5, ease: "easeInOut" as Easing, delay: 0.6 },
     },
     postSubmit: {
       y: -200,
@@ -172,7 +169,7 @@ export default function HeroSection() {
   };
 
   return (
-    <div className="h-[90vh] border-2 mt-10 relative flex justify-center items-center">
+    <div className="h-[90vh] relative flex justify-center items-center">
       {/* clip path */}
       {!animationComplete && (
         <motion.div
@@ -181,7 +178,7 @@ export default function HeroSection() {
             submitActive ? "postSubmit" : startAnimation ? "animate" : "initial"
           }
           initial="initial"
-          className={`bg-red-400 h-full w-full`}
+          className={`bg-brand h-full w-full z-10`}
           onAnimationComplete={(definition) => {
             if (definition === "postSubmit") {
               setAnimationComplete(true);

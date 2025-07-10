@@ -51,7 +51,7 @@ const FilePicker: React.FC<FilePickerProps> = ({
   return (
     <div className="flex flex-col items-center gap-1">
       <div
-        className="w-fit px-10 py-2 rounded-sm flex items-center gap-4 bg-white/80 shadow-lg border border-gray-300 hover:bg-blue-50 transition-colors cursor-pointer relative z-2"
+        className="w-fit px-10 py-2 rounded-sm flex items-center gap-4 bg-white/80 dark:bg-card shadow-lg border border-border hover:bg-blue-50 dark:hover:bg-sidebar-border transition-colors cursor-pointer relative z-2"
         onClick={handleDivClick}
       >
         <input
@@ -66,7 +66,7 @@ const FilePicker: React.FC<FilePickerProps> = ({
           onChange={handleFileChange}
         />
         <IoCloudUploadOutline size={20} className="text-blue-500" />
-        <span className="font-medium text-gray-800">Upload Resume</span>
+        <span className="font-medium text-primary">Upload Resume</span>
       </div>
 
       <div className="w-full h-6">
