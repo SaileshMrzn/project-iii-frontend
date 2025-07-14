@@ -36,7 +36,7 @@ function Navbar() {
   };
 
   return (
-    <header className="bg-transparent h-[10vh] items-center flex px-6 md:px-16 justify-between absolute top-0 w-full">
+    <header className="bg-transparent h-[10vh] items-center flex px-6 md:px-16 justify-between w-full">
       <Link href="/">[logo] Brand</Link>
 
       <nav className="hidden gap-8 md:flex">
@@ -47,7 +47,7 @@ function Navbar() {
           Login
         </Link>
         <Link
-          href="/"
+          href="/signup"
           className="hover_animation text-muted-foreground hover:text-primary transition-all ease-in-out duration-300"
         >
           Signup
@@ -66,6 +66,7 @@ function Navbar() {
         )}
       </div>
 
+      {/* mobile */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div

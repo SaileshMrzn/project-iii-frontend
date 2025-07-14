@@ -4,6 +4,7 @@ import "./globals.css";
 import ReactQueryProvider from "@/lib/react-query/ReactQueryProvider";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${atkinsonHyperlegible.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${atkinsonHyperlegible.variable} antialiased relative`}
       >
         <ThemeProvider
           attribute="class"
@@ -43,6 +44,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Toaster richColors />
+          <Navbar />
           <ReactQueryProvider>{children}</ReactQueryProvider>
         </ThemeProvider>
       </body>

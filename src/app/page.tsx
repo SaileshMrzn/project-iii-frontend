@@ -5,7 +5,6 @@ export default function Home() {
   return (
     <div className="relative">
       <div className="h-[10vh]" />
-      <Navbar />
       <Hero />
     </div>
   );
