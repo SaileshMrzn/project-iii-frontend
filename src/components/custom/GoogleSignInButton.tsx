@@ -18,7 +18,7 @@ const GoogleSignInButton = ({
   const variants = {
     icon: "w-10 h-10 p-2",
     small: "px-3 py-1 text-sm",
-    medium: "px-4 py-2 text-base",
+    medium: "px-4 py-2 text-sm",
   };
 
   const text = {

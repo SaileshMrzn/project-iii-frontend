@@ -15,6 +15,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import GoogleSignInButton from "@/components/custom/GoogleSignInButton";
+import { useIsDark } from "@/components/theme-provider";
+import { useEffect, useState } from "react";
 
 const FormSchema = z.object({
   username: z.string().min(2, {
@@ -29,6 +31,10 @@ const FormSchema = z.object({
 });
 
 function Signup() {
+  const [backgroundImage, setBackgroundImage] = useState("second");
+
+  const isDark = useIsDark();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -37,6 +43,14 @@ function Signup() {
       password: "",
     },
   });
+
+  useEffect(() => {
+    if (isDark) {
+      setBackgroundImage("/bg10.png");
+    } else {
+      setBackgroundImage("/bg10_light.png");
+    }
+  }, [isDark]);
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     toast("You submitted the following values", {
@@ -48,6 +62,8 @@ function Signup() {
     });
   }
 
+  console.log(isDark);
+
   return (
     <div className="flex justify-center items-center h-[90vh] pb-[5vh]">
       <div className="w-full md:w-2/3 lg:w-1/2 mx-6 h-[90%] xl:w-[90%] flex items-center justify-center flex-col bg-secondary rounded-md xl:grid grid-cols-2 overflow-hidden">
@@ -55,11 +71,11 @@ function Signup() {
         <div
           className="xl:col-span-1 h-full justify-center items-center hidden xl:flex relative bg-cover bg-center"
           style={{
-            backgroundImage: `url(/bg9.png)`,
+            backgroundImage: `url(${backgroundImage})`,
             objectFit: "cover",
           }}
         >
-          <h1 className="text-4xl">Welcome</h1>
+          <h1 className="text-4xl text-gray-100">Welcome</h1>
         </div>
 
         {/* form */}
@@ -120,7 +136,7 @@ function Signup() {
               />
               <Button
                 type="submit"
-                className="bg-brand cursor-pointer w-full mt-2 text-primary hover:bg-[#d26200]"
+                className="bg-brand cursor-pointer w-full mt-2 text-gray-100 hover:bg-brand/90"
               >
                 Submit
               </Button>
