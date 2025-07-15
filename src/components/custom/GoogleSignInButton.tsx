@@ -7,10 +7,12 @@ type Variant = "icon" | "small" | "medium";
 
 interface GoogleSignInButtonProps {
   variant?: Variant;
+  displayText?: string;
 }
 
 const GoogleSignInButton = ({
   variant = "medium",
+  displayText,
 }: GoogleSignInButtonProps) => {
   const baseStyle =
     "flex items-center justify-center rounded-md transition cursor-pointer";
@@ -23,8 +25,8 @@ const GoogleSignInButton = ({
 
   const text = {
     icon: "",
-    small: "Sign in",
-    medium: "Sign in with Google",
+    small: displayText || "Sign in",
+    medium: displayText || "Sign in with Google",
   };
 
   return (

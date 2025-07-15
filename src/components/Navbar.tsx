@@ -41,7 +41,7 @@ function Navbar() {
 
       <nav className="hidden gap-8 md:flex">
         <Link
-          href="/"
+          href="/login"
           className="hover_animation text-muted-foreground hover:text-primary transition-all ease-in-out duration-300"
         >
           Login

@@ -13,7 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-export const SignupFormSchema = z.object({
+export const LoginFormSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
@@ -26,8 +26,8 @@ export const SignupFormSchema = z.object({
 });
 
 const SignupForm = ({ onSubmit }: { onSubmit: any }) => {
-  const form = useForm<z.infer<typeof SignupFormSchema>>({
-    resolver: zodResolver(SignupFormSchema),
+  const form = useForm<z.infer<typeof LoginFormSchema>>({
+    resolver: zodResolver(LoginFormSchema),
     defaultValues: {
       username: "",
       email: "",
@@ -41,23 +41,6 @@ const SignupForm = ({ onSubmit }: { onSubmit: any }) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-6 flex flex-col w-64 md:w-72"
       >
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Enter Username"
-                  {...field}
-                  className="w-full"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="email"
