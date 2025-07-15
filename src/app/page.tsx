@@ -3,9 +3,9 @@ import Navbar from "@/components/Navbar";
 
 export default function Home() {
   return (
-    <div className="relative">
+    <main className="relative">
       <div className="h-[10vh]" />
       <Hero />
-    </div>
+    </main>
   );
 }

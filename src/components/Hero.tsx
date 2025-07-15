@@ -39,7 +39,7 @@ export default function HeroSection() {
 
   const heroTextContainerRef = useRef<HTMLDivElement>(null);
 
-  const { control, watch, handleSubmit } = useForm<FormData>();
+  const { control, handleSubmit } = useForm<FormData>();
 
   const { mutate, isPending, data } = useCompare();
 
