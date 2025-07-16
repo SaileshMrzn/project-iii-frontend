@@ -22,15 +22,15 @@ function Signup() {
     }
   }, [isDark]);
 
-  function onSubmit(data: z.infer<typeof SignupFormSchema>) {
-    toast("You submitted the following values", {
-      description: (
-        <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }
+  // function onSubmit(data: z.infer<typeof SignupFormSchema>) {
+  //   toast("You submitted the following values", {
+  //     description: (
+  //       <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
+  //         <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+  //       </pre>
+  //     ),
+  //   });
+  // }
 
   return (
     <main className="flex justify-center items-center h-[90vh] pb-[5vh]">
@@ -50,7 +50,7 @@ function Signup() {
         <div className="xl:col-span-1 flex flex-col items-center justify-center">
           <h2 className="text-2xl mb-4 text-center">Signup</h2>
 
-          <SignupForm onSubmit={onSubmit} />
+          <SignupForm />
 
           {/* google signin */}
           <div className="w-full flex flex-col justify-center items-center mt-2">

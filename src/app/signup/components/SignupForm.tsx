@@ -12,6 +12,8 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useSignup } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 export const SignupFormSchema = z.object({
   username: z.string().min(2, {
@@ -25,7 +27,7 @@ export const SignupFormSchema = z.object({
   }),
 });
 
-const SignupForm = ({ onSubmit }: { onSubmit: any }) => {
+const SignupForm = () => {
   const form = useForm<z.infer<typeof SignupFormSchema>>({
     resolver: zodResolver(SignupFormSchema),
     defaultValues: {
@@ -34,6 +36,19 @@ const SignupForm = ({ onSubmit }: { onSubmit: any }) => {
       password: "",
     },
   });
+
+  const { mutate: signup, isPending, data } = useSignup();
+
+  function onSubmit(data: z.infer<typeof SignupFormSchema>) {
+    signup(data, {
+      onSuccess: (result) => {
+        toast.success("Signup Successful");
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    });
+  }
 
   return (
     <Form {...form}>

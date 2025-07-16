@@ -8,8 +8,6 @@ type CompareRequestBody = {
 const BASE_URL = "http://localhost:4000";
 
 export const compare = async (body: CompareRequestBody) => {
-  console.log(body, "body");
-
   if (!body.resume) {
     throw new Error("File is required");
   }
