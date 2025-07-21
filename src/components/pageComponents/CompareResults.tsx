@@ -1,6 +1,6 @@
 import React from "react";
 import { ResultData } from "./Hero";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 

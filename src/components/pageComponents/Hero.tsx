@@ -2,9 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, Easing } from "motion/react";
-import FilePicker from "./custom/FilePicker";
-import { Textarea } from "./ui/textarea";
-import { Button } from "./ui/button";
+import FilePicker from "../custom/FilePicker";
+import { Textarea } from "../ui/textarea";
+import { Button } from "../ui/button";
 import { useForm, Controller } from "react-hook-form";
 import { useCompare } from "@/hooks/useCompare";
 import CompareResults from "./CompareResults";

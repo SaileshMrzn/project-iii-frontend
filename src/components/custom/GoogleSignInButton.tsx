@@ -1,7 +1,8 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+// import { signIn } from "next-auth/react";
 import Image from "next/image";
+import { login } from "@/actions/auth";
 
 type Variant = "icon" | "small" | "medium";
 
@@ -31,7 +32,7 @@ const GoogleSignInButton = ({
 
   return (
     <button
-      onClick={() => signIn("google")}
+      onClick={() => login()}
       className={`${baseStyle} bg-white dark:bg-black border border-border shadow-sm hover:shadow-md ${variants[variant]} flex items-center justify-center gap-3`}
     >
       <Image
