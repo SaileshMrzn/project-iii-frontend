@@ -14,9 +14,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useSignup } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { redirect } from "next/navigation";
 
 export const SignupFormSchema = z.object({
-  username: z.string().min(2, {
+  name: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
   email: z.string().email({
@@ -31,7 +32,7 @@ const SignupForm = () => {
   const form = useForm<z.infer<typeof SignupFormSchema>>({
     resolver: zodResolver(SignupFormSchema),
     defaultValues: {
-      username: "",
+      name: "",
       email: "",
       password: "",
     },
@@ -43,6 +44,9 @@ const SignupForm = () => {
     signup(data, {
       onSuccess: (result) => {
         toast.success("Signup Successful");
+        setTimeout(() => {
+          redirect("/login");
+        }, 500);
       },
       onError: (error) => {
         toast.error(error.message);
@@ -58,7 +62,7 @@ const SignupForm = () => {
       >
         <FormField
           control={form.control}
-          name="username"
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Username</FormLabel>

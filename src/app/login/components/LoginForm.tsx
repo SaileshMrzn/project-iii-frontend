@@ -12,11 +12,9 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { login } from "@/actions/auth";
 
 export const LoginFormSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
   email: z.string().email({
     message: "Please enter a valid email address.",
   }),
@@ -25,15 +23,18 @@ export const LoginFormSchema = z.object({
   }),
 });
 
-const SignupForm = ({ onSubmit }: { onSubmit: any }) => {
+const LoginForm = () => {
   const form = useForm<z.infer<typeof LoginFormSchema>>({
     resolver: zodResolver(LoginFormSchema),
     defaultValues: {
-      username: "",
       email: "",
       password: "",
     },
   });
+
+  async function onSubmit(data: z.infer<typeof LoginFormSchema>) {
+    await login("credentials", data);
+  }
 
   return (
     <Form {...form}>
@@ -82,4 +83,4 @@ const SignupForm = ({ onSubmit }: { onSubmit: any }) => {
   );
 };
 
-export default SignupForm;
+export default LoginForm;

@@ -3,13 +3,9 @@
 import React from "react";
 import { useEffect, useState } from "react";
 
-import { toast } from "sonner";
-import { z } from "zod";
-
 import GoogleSignInButton from "@/components/custom/GoogleSignInButton";
 import { useIsDark } from "@/components/theme-provider";
 import LoginForm from "./components/LoginForm";
-import { LoginFormSchema } from "./components/LoginForm";
 
 const page = () => {
   const [backgroundImage, setBackgroundImage] = useState("second");
@@ -24,15 +20,6 @@ const page = () => {
     }
   }, [isDark]);
 
-  function onSubmit(data: z.infer<typeof LoginFormSchema>) {
-    toast("You submitted the following values", {
-      description: (
-        <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }
   return (
     <main className="flex justify-center items-center h-[90vh] pb-[5vh]">
       <section className="w-full md:w-2/3 lg:w-1/2 mx-6 h-[90%] xl:w-[90%] flex items-center justify-center flex-col bg-secondary rounded-md xl:grid grid-cols-2 overflow-hidden">
@@ -51,7 +38,7 @@ const page = () => {
         <div className="xl:col-span-1 flex flex-col items-center justify-center">
           <h2 className="text-2xl mb-4 text-center">Login</h2>
 
-          <LoginForm onSubmit={onSubmit} />
+          <LoginForm />
 
           {/* google signin */}
           <div className="w-full flex flex-col justify-center items-center mt-2">

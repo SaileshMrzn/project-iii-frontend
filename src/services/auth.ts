@@ -2,7 +2,7 @@ import api from "./api";
 import { AxiosError } from "axios";
 
 export type SignupRequestBody = {
-  username?: string;
+  name?: string;
   email: string;
   password: string;
 };
