@@ -1,11 +1,10 @@
-import Hero from "@/components/Hero";
-import Navbar from "@/components/Navbar";
+import Hero from "@/components/pageComponents/Hero";
 
 export default function Home() {
   return (
-    <div>
-      <Navbar />
+    <main className="relative">
+      {/* <div className="h-[10vh]" /> */}
       <Hero />
-    </div>
+    </main>
   );
 }

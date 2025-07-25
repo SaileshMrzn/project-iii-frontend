@@ -2,45 +2,72 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, Easing } from "motion/react";
-import FilePicker from "./custom/FilePicker";
-import { Textarea } from "./ui/textarea";
-import { Button } from "./ui/button";
+import FilePicker from "../custom/FilePicker";
+import { Textarea } from "../ui/textarea";
+import { Button } from "../ui/button";
 import { useForm, Controller } from "react-hook-form";
+import { useCompare } from "@/hooks/useCompare";
+import CompareResults from "./CompareResults";
+import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 type FormData = {
-  file: File | null;
-  description: string;
+  resume: File | null;
+  jobDescription: string;
+};
+
+export type ResultData = {
+  similarity: number;
+  matchedData: {
+    skillsMatch: {
+      allSkillsInJD: string[];
+      matchedSkills: string[];
+      percentageMatch: number;
+    };
+    keywordsMatch: {
+      allKeywordsInJD: string[];
+      matchedKeywords: string[];
+      percentageMatch: number;
+    };
+  };
 };
 
 export default function HeroSection() {
   const [submitActive, setSubmitActive] = useState(false);
   const [animationComplete, setAnimationComplete] = useState(false);
+  const [startAnimation, setStartAnimation] = useState(false);
   const [topOffset, setTopOffset] = useState(0);
 
   const heroTextContainerRef = useRef<HTMLDivElement>(null);
 
-  const { control, watch, handleSubmit } = useForm<FormData>();
+  const { control, handleSubmit } = useForm<FormData>();
+
+  const { mutate, isPending, data } = useCompare();
 
   const submitForm = (data: FormData) => {
-    console.log(data, "dddddd");
-
-    setSubmitActive(true);
-    const cleanDescription = data.description
+    const cleanDescription = data.jobDescription
       ?.replace(/<[^>]+>/g, "")
       .replace(/\s+/g, " ")
       .trim();
 
     const payload = {
       ...data,
-      description: cleanDescription,
+      jobDescription: cleanDescription,
     };
 
-    console.log(payload, "pay");
+    mutate(payload, {
+      onSuccess: () => {
+        setSubmitActive(true);
+      },
+      onError: (error) => {
+        if (error instanceof AxiosError) {
+          toast.error(
+            error.response?.data?.message || "An unknown error occurred"
+          );
+        }
+      },
+    });
   };
-
-  console.log(watch("file"));
-
-  const [startAnimation, setStartAnimation] = useState(false);
 
   useEffect(() => {
     const updateOffset = () => {
@@ -56,6 +83,7 @@ export default function HeroSection() {
     return () => window.removeEventListener("resize", updateOffset);
   }, []);
 
+  // animation variants
   const textVariants = {
     initial: { y: 0, opacity: 1, scale: 1 },
     animate: {
@@ -105,7 +133,7 @@ export default function HeroSection() {
     initial: { y: 20 },
     animate: {
       y: -topOffset,
-      transition: { duration: 0.5, ease: "easeInOut" as Easing, delay: 0.5 },
+      transition: { duration: 0.5, ease: "easeInOut" as Easing, delay: 0.6 },
     },
     postSubmit: {
       y: -200,
@@ -140,10 +168,8 @@ export default function HeroSection() {
     },
   };
 
-  // console.log(submitActive, "submit");
-
   return (
-    <div className="h-[90vh] border-2 mt-10 relative">
+    <div className="h-[90vh] relative flex justify-center items-center">
       {/* clip path */}
       {!animationComplete && (
         <motion.div
@@ -152,7 +178,7 @@ export default function HeroSection() {
             submitActive ? "postSubmit" : startAnimation ? "animate" : "initial"
           }
           initial="initial"
-          className={`bg-red-400 h-full w-full`}
+          className={`bg-brand h-full w-full z-10`}
           onAnimationComplete={(definition) => {
             if (definition === "postSubmit") {
               setAnimationComplete(true);
@@ -201,7 +227,7 @@ export default function HeroSection() {
             className="flex justify-center mt-1 md:mt-4"
           >
             <Controller
-              name="file"
+              name="resume"
               control={control}
               render={({ field }) => (
                 <FilePicker {...field} setStartAnimation={setStartAnimation} />
@@ -222,7 +248,7 @@ export default function HeroSection() {
             className="text-center w-[90%]"
           >
             <Controller
-              name="description"
+              name="jobDescription"
               control={control}
               render={({ field }) => (
                 <Textarea
@@ -263,11 +289,14 @@ export default function HeroSection() {
               onClick={handleSubmit(submitForm)}
               className="cursor-pointer"
             >
-              Submit
+              {isPending ? "Loading..." : "Submit"}
             </Button>
           </motion.div>
         </div>
       )}
+
+      {/* result after animation */}
+      {animationComplete && <CompareResults result={data} />}
     </div>
   );
 }
