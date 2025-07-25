@@ -4,13 +4,7 @@ import { Button } from "../ui/button";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 
-function CompareResults({
-  result,
-  setAnimationComplete,
-}: {
-  result: ResultData;
-  setAnimationComplete: any;
-}) {
+function CompareResults({ result }: { result: ResultData }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

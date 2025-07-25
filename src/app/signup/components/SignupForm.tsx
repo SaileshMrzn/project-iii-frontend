@@ -38,11 +38,11 @@ const SignupForm = () => {
     },
   });
 
-  const { mutate: signup, isPending, data } = useSignup();
+  const { mutate: signup } = useSignup();
 
   function onSubmit(data: z.infer<typeof SignupFormSchema>) {
     signup(data, {
-      onSuccess: (result) => {
+      onSuccess: () => {
         toast.success("Signup Successful");
         setTimeout(() => {
           redirect("/login");

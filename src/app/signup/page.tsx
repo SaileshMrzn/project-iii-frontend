@@ -1,13 +1,9 @@
 "use client";
 
-import { toast } from "sonner";
-import { z } from "zod";
-
 import GoogleSignInButton from "@/components/custom/GoogleSignInButton";
 import { useIsDark } from "@/components/theme-provider";
 import { useEffect, useState } from "react";
 import SignupForm from "./components/SignupForm";
-import { SignupFormSchema } from "./components/SignupForm";
 
 function Signup() {
   const [backgroundImage, setBackgroundImage] = useState("second");

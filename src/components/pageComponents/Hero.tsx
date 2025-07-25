@@ -9,6 +9,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useCompare } from "@/hooks/useCompare";
 import CompareResults from "./CompareResults";
 import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 type FormData = {
   resume: File | null;
@@ -55,16 +56,15 @@ export default function HeroSection() {
     };
 
     mutate(payload, {
-      onSuccess: (result) => {
+      onSuccess: () => {
         setSubmitActive(true);
       },
       onError: (error) => {
-        console.error("Comparison failed:", error);
-        toast.error(
-          (error as any)?.response?.data?.message ||
-            error.message ||
-            "An error occurred"
-        );
+        if (error instanceof AxiosError) {
+          toast.error(
+            error.response?.data?.message || "An unknown error occurred"
+          );
+        }
       },
     });
   };
@@ -296,12 +296,7 @@ export default function HeroSection() {
       )}
 
       {/* result after animation */}
-      {animationComplete && (
-        <CompareResults
-          result={data}
-          setAnimationComplete={setAnimationComplete}
-        />
-      )}
+      {animationComplete && <CompareResults result={data} />}
     </div>
   );
 }

@@ -9,8 +9,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { logout } from "@/actions/auth";
+import { Session } from "next-auth";
 
-export const UserAvatar = ({ session }: { session: any }) => {
+export const UserAvatar = ({ session }: { session: Session }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="cursor-pointer">
@@ -32,7 +33,7 @@ export const UserAvatar = ({ session }: { session: any }) => {
   );
 };
 
-export const UserAvatarMobile = ({ session }: { session: any }) => {
+export const UserAvatarMobile = ({ session }: { session: Session }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="cursor-pointer">

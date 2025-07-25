@@ -7,7 +7,7 @@ import GoogleSignInButton from "@/components/custom/GoogleSignInButton";
 import { useIsDark } from "@/components/theme-provider";
 import LoginForm from "./components/LoginForm";
 
-const page = () => {
+const Login = () => {
   const [backgroundImage, setBackgroundImage] = useState("second");
 
   const isDark = useIsDark();
@@ -60,4 +60,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Login;
