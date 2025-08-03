@@ -21,10 +21,9 @@ export type JobsResponse = {
 };
 
 export function useGetJobs(
-  params: { keywords: string },
+  params: { keywords: string; filter: string[] },
   options?: { enabled: boolean }
 ) {
-  console.log(options?.enabled, "enabled");
   return useQuery<JobsResponse>({
     queryKey: ["jobs", params],
     queryFn: () => getJobs(params),

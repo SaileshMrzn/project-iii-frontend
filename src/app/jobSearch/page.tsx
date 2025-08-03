@@ -2,34 +2,41 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import JobCard from "./components/JobCard";
 import { useGetJobs } from "@/hooks/useJobSearch";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
+import { MultiFilterSelect } from "./components/MultiFilterSelect";
 
 const JobSearch = () => {
   const searchParams = useSearchParams();
+
   const keywords = searchParams.get("keywords") || "";
+  const filter = useMemo(() => searchParams.getAll("filter"), [searchParams]);
 
   const [search, setSearch] = useState("");
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
   const router = useRouter();
 
   const { data, isFetching, error, refetch } = useGetJobs(
-    { keywords },
+    { keywords, filter: filter },
     {
       enabled: false,
     }
   );
 
   useEffect(() => {
-    if (!!keywords) {
+    if (keywords) {
       setSearch(keywords);
+      if (filter.length) {
+        setSelectedFilters(filter);
+      }
       refetch();
     }
-  }, [keywords]);
+  }, [keywords, filter]);
 
   useEffect(() => {
     if (error) {
@@ -44,10 +51,34 @@ const JobSearch = () => {
     }
   }, [error]);
 
+  // useEffect(() => {
+  //   if (selectedFilters.length > 0) {
+  //     const params = new URLSearchParams();
+  //     selectedFilters.forEach((filter) => {
+  //       params.append("filter", filter);
+  //     });
+  //     router.push(`/jobSearch?${params.toString()}`);
+  //     if (!!keywords) {
+  //       setTimeout(() => {
+  //         refetch();
+  //       }, 1000);
+  //     }
+  //   } else {
+  //     router.push("/jobSearch");
+  //   }
+  // }, [selectedFilters, router]);
+
   const handleSearch = () => {
-    const encoded = encodeURIComponent(search.trim());
-    if (search.trim()) {
-      router.push(`/jobSearch?keywords=${encoded}`);
+    if (search) {
+      const encoded = encodeURIComponent(search.trim());
+      const params = new URLSearchParams();
+      selectedFilters.forEach((filter) => {
+        params.append("filter", filter);
+      });
+      const paramString = params.toString();
+      router.push(
+        `/jobSearch?keywords=${encoded}${paramString ? `&${paramString}` : ""}`
+      );
     } else {
       router.push("/jobSearch");
     }
@@ -76,6 +107,16 @@ const JobSearch = () => {
         <Button onClick={handleSearch}>
           {isFetching ? "Loading..." : "Search"}
         </Button>
+
+        <MultiFilterSelect
+          options={[
+            { label: "LinkedIn", value: "linkedin" },
+            { label: "Mero Jobs", value: "merojobs" },
+            { label: "Kumari Jobs", value: "kumarijobs" },
+          ]}
+          setSelectedFilters={setSelectedFilters}
+          selectedFilters={selectedFilters}
+        />
       </div>
 
       {!!data?.data && !isFetching && (
