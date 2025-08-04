@@ -50,9 +50,13 @@ const JobCard = ({ data }: { data: Job }) => {
         </div>
         {/* --- */}
 
-        <Button variant={"outline"} className="h-8 self-end">
-          View More
-        </Button>
+        <a
+          href={data?.link}
+          className="h-8 self-end cursor-pointer"
+          target="_blank"
+        >
+          <Button variant={"outline"}>View More</Button>
+        </a>
       </div>
     </div>
   );
