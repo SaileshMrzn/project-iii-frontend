@@ -2,13 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import React, { useEffect, useMemo, useState } from "react";
-import JobCard from "./components/JobCard";
-import { useGetJobs } from "@/hooks/useJobSearch";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { AxiosError } from "axios";
 import { MultiFilterSelect } from "./components/MultiFilterSelect";
+import JobsList from "./components/JobsList";
 
 const JobSearch = () => {
   const searchParams = useSearchParams();
@@ -18,15 +15,10 @@ const JobSearch = () => {
 
   const [search, setSearch] = useState("");
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [triggerFetch, setTriggerFetch] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
-
-  const { data, isFetching, error, refetch } = useGetJobs(
-    { keywords, filter: filter },
-    {
-      enabled: false,
-    }
-  );
 
   useEffect(() => {
     if (keywords) {
@@ -34,39 +26,9 @@ const JobSearch = () => {
       if (filter.length) {
         setSelectedFilters(filter);
       }
-      refetch();
+      setTriggerFetch(true);
     }
   }, [keywords, filter]);
-
-  useEffect(() => {
-    if (error) {
-      const message =
-        error instanceof AxiosError
-          ? error?.response?.data?.message
-          : error instanceof Error
-          ? error?.message
-          : "Something went wrong";
-
-      toast.error(message);
-    }
-  }, [error]);
-
-  // useEffect(() => {
-  //   if (selectedFilters.length > 0) {
-  //     const params = new URLSearchParams();
-  //     selectedFilters.forEach((filter) => {
-  //       params.append("filter", filter);
-  //     });
-  //     router.push(`/jobSearch?${params.toString()}`);
-  //     if (!!keywords) {
-  //       setTimeout(() => {
-  //         refetch();
-  //       }, 1000);
-  //     }
-  //   } else {
-  //     router.push("/jobSearch");
-  //   }
-  // }, [selectedFilters, router]);
 
   const handleSearch = () => {
     if (search) {
@@ -104,9 +66,6 @@ const JobSearch = () => {
           onChange={(e) => setSearch(e.target.value)}
           value={search}
         />
-        <Button onClick={handleSearch}>
-          {isFetching ? "Loading..." : "Search"}
-        </Button>
 
         <MultiFilterSelect
           options={[
@@ -117,28 +76,18 @@ const JobSearch = () => {
           setSelectedFilters={setSelectedFilters}
           selectedFilters={selectedFilters}
         />
+
+        <Button onClick={handleSearch} disabled={loading}>
+          {loading ? "Loading..." : "Search"}
+        </Button>
       </div>
 
-      {!!data?.data && !isFetching && (
-        <p className="mb-4">{`${data?.data.length} top results found`}</p>
-      )}
-
-      {isFetching ? (
-        <p className="text-muted-foreground">Loading...</p>
-      ) : !data?.data ? (
-        <p className="text-muted-foreground">No jobs yet. Try searching!</p>
-      ) : data.data.length === 0 ? (
-        <p className="text-muted-foreground">No jobs found.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {data.data.map((job, index) => (
-            <JobCard
-              data={job}
-              key={`${job?.title}-${job?.company?.name}-${index}`}
-            />
-          ))}
-        </div>
-      )}
+      <JobsList
+        keywords={keywords}
+        filter={filter}
+        triggerFetch={triggerFetch}
+        setLoading={setLoading}
+      />
 
       {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <JobCard data={job} />

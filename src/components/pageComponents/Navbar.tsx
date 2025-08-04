@@ -65,7 +65,19 @@ function Navbar({
         </nav>
       )}
 
-      {session && <div className="hidden md:block">{children}</div>}
+      {session && (
+        <div className="hidden md:flex items-center gap-8">
+          <nav>
+            <Link
+              href="/jobSearch"
+              className="hover_animation text-muted-foreground hover:text-primary transition-all ease-in-out duration-300"
+            >
+              Search Jobs
+            </Link>
+          </nav>
+          {children}
+        </div>
+      )}
 
       <div className="md:hidden z-50">
         {!menuOpen ? (
@@ -129,6 +141,16 @@ function Navbar({
                 exit="exit"
                 transition={{ staggerChildren: 0.1, delayChildren: 0.3 }}
               >
+                <motion.div variants={navLinkVariants}>
+                  <Link
+                    href="/jobSearch"
+                    className="text-3xl text-brand-foreground"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Search Jobs
+                  </Link>
+                </motion.div>
+
                 <motion.div variants={navLinkVariants}>
                   <Link
                     href="/login"
