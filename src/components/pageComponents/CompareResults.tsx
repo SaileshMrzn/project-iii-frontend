@@ -11,6 +11,17 @@ function CompareResults({ result }: { result: ResultData }) {
 
   const showJobs = !!session?.user && result.similarity > 20;
 
+  const [showRecommended, setShowRecommended] = useState(false);
+
+  useEffect(() => {
+    if (showJobs) {
+      const timer = setTimeout(() => setShowRecommended(true), 1500);
+      return () => clearTimeout(timer);
+    } else {
+      setShowRecommended(false);
+    }
+  }, [showJobs]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -108,14 +119,18 @@ function CompareResults({ result }: { result: ResultData }) {
       </div>
       {/* --- */}
 
-      {showJobs && (
-        <h2 className="text-3xl xl:text-5xl mb-4">Recommended Jobs:</h2>
-      )}
-      {showJobs && (
-        <JobsList
-          keywords={result.matchedData.matchedRole}
-          triggerFetch={true}
-        />
+      {showJobs && showRecommended && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, ease: "easeIn" }}
+        >
+          <h2 className="text-3xl xl:text-5xl mb-4">Recommended Jobs:</h2>
+          <JobsList
+            keywords={result.matchedData.matchedRole}
+            triggerFetch={true}
+          />
+        </motion.div>
       )}
     </motion.div>
   );
