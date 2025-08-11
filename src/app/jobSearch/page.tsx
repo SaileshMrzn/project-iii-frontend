@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { MultiFilterSelect } from "./components/MultiFilterSelect";
 import JobsList from "./components/JobsList";
+import { toast } from "sonner";
 
 const JobSearch = () => {
   const searchParams = useSearchParams();
@@ -31,30 +32,21 @@ const JobSearch = () => {
   }, [keywords, filter]);
 
   const handleSearch = () => {
-    if (search) {
-      const encoded = encodeURIComponent(search.trim());
-      const params = new URLSearchParams();
-      selectedFilters.forEach((filter) => {
-        params.append("filter", filter);
-      });
-      const paramString = params.toString();
-      router.push(
-        `/jobSearch?keywords=${encoded}${paramString ? `&${paramString}` : ""}`
-      );
-    } else {
+    if (!search) {
+      toast.warning("Please enter a job title");
       router.push("/jobSearch");
     }
-  };
 
-  // const job = {
-  //   title: "Full Stack Developer and IT Project Manager",
-  //   company: {
-  //     name: "Nepal Can Code",
-  //     location: "Tinkune, Nepal",
-  //   },
-  //   posted: "5 days ago",
-  //   source: "LinkedIn",
-  // };
+    const encoded = encodeURIComponent(search.trim());
+    const params = new URLSearchParams();
+    selectedFilters.forEach((filter) => {
+      params.append("filter", filter);
+    });
+    const paramString = params.toString();
+    router.push(
+      `/jobSearch?keywords=${encoded}${paramString ? `&${paramString}` : ""}`
+    );
+  };
 
   return (
     <div className="px-6 md:px-16 pb-8">
@@ -88,16 +80,6 @@ const JobSearch = () => {
         triggerFetch={triggerFetch}
         setLoading={setLoading}
       />
-
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <JobCard data={job} />
-        <JobCard data={job} />
-        <JobCard data={job} />
-        <JobCard data={job} />
-        <JobCard data={job} />
-        <JobCard data={job} />
-        <JobCard data={job} />
-      </div> */}
     </div>
   );
 };
