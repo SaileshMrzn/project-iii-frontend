@@ -8,6 +8,7 @@ import Navbar from "@/components/pageComponents/Navbar";
 import { auth } from "@/auth";
 import UserAvatarServer from "@/components/custom/UserAvatarServer";
 import { SessionProvider } from "next-auth/react";
+import ServerLoading from "@/components/custom/ServerLoading";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,6 +49,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <ServerLoading />
           <Toaster richColors />
           <Navbar session={session}>
             <UserAvatarServer />
