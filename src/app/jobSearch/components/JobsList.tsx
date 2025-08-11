@@ -13,7 +13,7 @@ const JobsList = ({
   keywords: string;
   filter?: string[];
   triggerFetch: boolean;
-  setLoading?: any;
+  setLoading?: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { data, isFetching, error, refetch } = useGetJobs(
     { keywords, filter: filter || [] },
@@ -26,7 +26,7 @@ const JobsList = ({
     if (triggerFetch) {
       refetch();
     }
-  }, [triggerFetch]);
+  }, [triggerFetch, refetch]);
 
   useEffect(() => {
     if (setLoading) {
@@ -36,7 +36,7 @@ const JobsList = ({
         setLoading(false);
       }
     }
-  }, [isFetching]);
+  }, [isFetching, setLoading]);
 
   useEffect(() => {
     if (error) {

@@ -10,7 +10,6 @@ import { useCompare } from "@/hooks/useCompare";
 import CompareResults from "./CompareResults";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
-import { useSession } from "next-auth/react";
 
 type FormData = {
   resume: File | null;

@@ -137,7 +137,19 @@ function CompareResults({ result }: { result: ResultData }) {
 }
 
 // Score Item Component
-const ScoreItem = ({ label, value, delay, size = "small", className }) => {
+const ScoreItem = ({
+  label,
+  value,
+  delay,
+  size = "small",
+  className,
+}: {
+  label: string;
+  value: number;
+  delay: number;
+  size?: string;
+  className: string;
+}) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {

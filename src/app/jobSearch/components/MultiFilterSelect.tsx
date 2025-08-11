@@ -45,11 +45,11 @@ export function MultiFilterSelect({
     onChange?.(newValues);
   };
 
-  const handleRemove = (value: string) => {
-    const newValues = selectedFilters.filter((v) => v !== value);
-    setSelectedFilters(newValues);
-    onChange?.(newValues);
-  };
+  // const handleRemove = (value: string) => {
+  //   const newValues = selectedFilters.filter((v) => v !== value);
+  //   setSelectedFilters(newValues);
+  //   onChange?.(newValues);
+  // };
 
   return (
     <div className="space-y-2">

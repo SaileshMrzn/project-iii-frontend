@@ -1,4 +1,4 @@
-import { UsePrefetchQueryOptions, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getJobs } from "@/services/jobSearch";
 
 export type Job = {
