@@ -29,6 +29,7 @@ export type ResultData = {
       matchedKeywords: string[];
       percentageMatch: number;
     };
+    matchedRole: string;
   };
 };
 
@@ -169,7 +170,7 @@ export default function HeroSection() {
   };
 
   return (
-    <div className="h-[90vh] relative flex justify-center items-center">
+    <div className="min-h-[90vh] relative flex justify-center">
       {/* clip path */}
       {!animationComplete && (
         <motion.div
@@ -178,7 +179,7 @@ export default function HeroSection() {
             submitActive ? "postSubmit" : startAnimation ? "animate" : "initial"
           }
           initial="initial"
-          className={`bg-brand h-full w-full z-10`}
+          className={`bg-brand h-[90vh] w-full z-10`}
           onAnimationComplete={(definition) => {
             if (definition === "postSubmit") {
               setAnimationComplete(true);
