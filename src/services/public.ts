@@ -5,7 +5,10 @@ type CompareRequestBody = {
   jobDescription: string;
 };
 
-const BASE_URL = "http://localhost:4000";
+const BASE_URL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:4000"
+    : "https://project-iii-backend.onrender.com";
 
 export const compare = async (body: CompareRequestBody) => {
   if (!body.resume) {
